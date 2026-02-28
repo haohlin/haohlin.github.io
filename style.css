@@ -1,6 +1,6 @@
 /* ============================================
    Haohan Lin — Portfolio
-   Dark grayscale palette, refined minimalism
+   Dark navy-gray with ambient visual effects
    ============================================ */
 
 *, *::before, *::after {
@@ -10,12 +10,13 @@
 }
 
 :root {
-    --bg: #0a0a0a;
-    --surface: #141414;
-    --border: #262626;
-    --text: #d4d4d4;
-    --text-muted: #737373;
-    --accent: #a3a3a3;
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #21262d;
+    --text: #d1d5db;
+    --text-muted: #6b7280;
+    --accent: #9ca3af;
+    --glow-color: rgba(99, 102, 241, 0.08);
     --font-display: 'Syne', sans-serif;
     --font-body: 'Outfit', sans-serif;
 }
@@ -27,11 +28,30 @@ html {
 
 body {
     font-family: var(--font-body);
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image:
+        radial-gradient(ellipse at 15% 50%, rgba(99, 102, 241, 0.04) 0%, transparent 50%),
+        radial-gradient(ellipse at 85% 20%, rgba(59, 130, 246, 0.03) 0%, transparent 50%);
     color: var(--text);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* --- Grain overlay --- */
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 600'%3E%3Cfilter id='a'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23a)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 182px;
+    opacity: 0.04;
+    pointer-events: none;
+    z-index: 9999;
 }
 
 a {
@@ -50,11 +70,64 @@ a:hover {
     padding: 0 24px;
 }
 
+/* --- Ambient Orbs --- */
+
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -1;
+    will-change: transform;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent 70%);
+    top: -200px;
+    right: -200px;
+    filter: blur(100px);
+    animation: float1 25s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.08), transparent 70%);
+    bottom: -150px;
+    left: -150px;
+    filter: blur(120px);
+    animation: float2 30s ease-in-out infinite;
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -50px) scale(1.05); }
+    66% { transform: translate(-20px, 30px) scale(0.95); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(40px, -30px); }
+}
+
+/* --- Scroll Progress Bar --- */
+
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    width: 0%;
+    background: linear-gradient(90deg, #6366f1, #3b82f6, #6366f1);
+    z-index: 101;
+}
+
 /* --- Navigation --- */
 
 .nav {
     position: fixed;
-    top: 0;
+    top: 2px;
     left: 0;
     right: 0;
     z-index: 100;
@@ -64,7 +137,7 @@ a:hover {
 }
 
 .nav.scrolled {
-    background: rgba(20, 20, 20, 0.85);
+    background: rgba(13, 17, 23, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom-color: var(--border);
@@ -155,8 +228,8 @@ a:hover {
     position: absolute;
     inset: 0;
     background-image:
-        linear-gradient(rgba(163, 163, 163, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(163, 163, 163, 0.035) 1px, transparent 1px);
+        linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
     background-size: 60px 60px;
     mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 100%);
     -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 50%, black 20%, transparent 100%);
@@ -218,19 +291,38 @@ a:hover {
     padding: 8px 20px;
     border: 1px solid var(--border);
     border-radius: 6px;
-    transition: color 0.2s, border-color 0.2s, background 0.2s;
+    transition: color 0.2s, border-color 0.3s, background 0.2s, box-shadow 0.3s;
 }
 
 .hero-link:hover {
     color: var(--text);
-    border-color: var(--accent);
-    background: rgba(163, 163, 163, 0.05);
+    border-color: rgba(99, 102, 241, 0.4);
+    background: rgba(99, 102, 241, 0.05);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.08);
 }
 
 /* --- Sections --- */
 
 .section {
     padding: 100px 0;
+    position: relative;
+}
+
+/* Alternating section backgrounds */
+main > .section:nth-child(even) {
+    background: rgba(22, 27, 34, 0.5);
+}
+
+/* Subtle divider between sections */
+main > .section + .section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.2), transparent);
 }
 
 .section-label {
@@ -269,7 +361,7 @@ a:hover {
     top: 8px;
     bottom: 8px;
     width: 1px;
-    background: var(--border);
+    background: linear-gradient(to bottom, rgba(99, 102, 241, 0.3), var(--border), var(--border), rgba(99, 102, 241, 0.3));
 }
 
 .timeline-item {
@@ -290,11 +382,12 @@ a:hover {
     border-radius: 50%;
     border: 2px solid var(--border);
     background: var(--bg);
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .timeline-item:hover .timeline-dot {
-    border-color: var(--accent);
+    border-color: rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
 }
 
 .timeline-date {
@@ -336,17 +429,62 @@ a:hover {
     gap: 20px;
 }
 
-.card {
+/* Shared glow-card treatment */
+.card,
+.edu-card,
+.pub-item {
+    position: relative;
+    overflow: hidden;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+.card::before,
+.edu-card::before,
+.pub-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    opacity: 0;
+    background: radial-gradient(
+        500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        var(--glow-color),
+        transparent 40%
+    );
+    transition: opacity 0.4s;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.card:hover::before,
+.edu-card:hover::before,
+.pub-item:hover::before {
+    opacity: 1;
+}
+
+.card:hover,
+.edu-card:hover,
+.pub-item:hover {
+    border-color: rgba(99, 102, 241, 0.25);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.card > *,
+.edu-card > *,
+.pub-item > * {
+    position: relative;
+    z-index: 1;
+}
+
+.card {
     padding: 28px;
-    transition: border-color 0.3s, transform 0.3s;
 }
 
 .card:hover {
-    border-color: var(--accent);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
 }
 
 .card-title {
@@ -375,10 +513,11 @@ a:hover {
     font-size: 0.7rem;
     font-weight: 500;
     color: var(--text-muted);
-    background: rgba(163, 163, 163, 0.08);
+    background: rgba(99, 102, 241, 0.06);
     padding: 4px 10px;
     border-radius: 4px;
     letter-spacing: 0.02em;
+    border: 1px solid rgba(99, 102, 241, 0.08);
 }
 
 /* --- Education --- */
@@ -390,15 +529,7 @@ a:hover {
 }
 
 .edu-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
     padding: 28px;
-    transition: border-color 0.3s;
-}
-
-.edu-card:hover {
-    border-color: var(--accent);
 }
 
 .edu-years {
@@ -440,14 +571,6 @@ a:hover {
 
 .pub-item {
     padding: 24px 28px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: border-color 0.3s;
-}
-
-.pub-item:hover {
-    border-color: var(--accent);
 }
 
 .pub-venue {
@@ -508,12 +631,13 @@ a:hover {
     border: 1px solid var(--border);
     padding: 8px 16px;
     border-radius: 6px;
-    transition: border-color 0.2s, background 0.2s;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
 .chip:hover {
-    border-color: var(--accent);
-    background: rgba(163, 163, 163, 0.05);
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(99, 102, 241, 0.05);
+    box-shadow: 0 0 12px rgba(99, 102, 241, 0.06);
 }
 
 /* --- Footer --- */
@@ -552,13 +676,13 @@ a:hover {
 
 .reveal {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    transform: translateY(24px) scale(0.98);
+    transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
 .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 /* --- Responsive --- */
@@ -576,10 +700,10 @@ a:hover {
 
     .nav-links {
         position: fixed;
-        top: 64px;
+        top: 66px;
         left: 0;
         right: 0;
-        background: rgba(20, 20, 20, 0.95);
+        background: rgba(13, 17, 23, 0.95);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         flex-direction: column;
@@ -643,5 +767,15 @@ a:hover {
 
     .timeline-dot {
         left: -24px;
+    }
+
+    .orb-1 {
+        width: 350px;
+        height: 350px;
+    }
+
+    .orb-2 {
+        width: 300px;
+        height: 300px;
     }
 }
