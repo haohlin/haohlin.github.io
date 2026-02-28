@@ -52,6 +52,8 @@ body::before {
     opacity: 0.04;
     pointer-events: none;
     z-index: 9999;
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 a {
@@ -78,6 +80,7 @@ a:hover {
     pointer-events: none;
     z-index: -1;
     will-change: transform;
+    transform: translateZ(0);
 }
 
 .orb-1 {
@@ -101,14 +104,14 @@ a:hover {
 }
 
 @keyframes float1 {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -50px) scale(1.05); }
-    66% { transform: translate(-20px, 30px) scale(0.95); }
+    0%, 100% { transform: translate(0, 0) scale(1) translateZ(0); }
+    33% { transform: translate(30px, -50px) scale(1.05) translateZ(0); }
+    66% { transform: translate(-20px, 30px) scale(0.95) translateZ(0); }
 }
 
 @keyframes float2 {
-    0%, 100% { transform: translate(0, 0); }
-    50% { transform: translate(40px, -30px); }
+    0%, 100% { transform: translate(0, 0) translateZ(0); }
+    50% { transform: translate(40px, -30px) translateZ(0); }
 }
 
 /* --- Scroll Progress Bar --- */
@@ -121,6 +124,7 @@ a:hover {
     width: 0%;
     background: linear-gradient(90deg, #6366f1, #3b82f6, #6366f1);
     z-index: 101;
+    will-change: width;
 }
 
 /* --- Navigation --- */
@@ -172,6 +176,7 @@ a:hover {
     border: none;
     cursor: pointer;
     padding: 4px;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .nav-toggle span {
@@ -292,6 +297,7 @@ a:hover {
     border: 1px solid var(--border);
     border-radius: 6px;
     transition: color 0.2s, border-color 0.3s, background 0.2s, box-shadow 0.3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .hero-link:hover {
@@ -385,7 +391,8 @@ main > .section + .section::before {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-.timeline-item:hover .timeline-dot {
+.timeline-item:hover .timeline-dot,
+.timeline-item.touch-active .timeline-dot {
     border-color: rgba(99, 102, 241, 0.6);
     box-shadow: 0 0 12px rgba(99, 102, 241, 0.2);
 }
@@ -439,8 +446,10 @@ main > .section + .section::before {
     border: 1px solid var(--border);
     border-radius: 12px;
     transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    -webkit-tap-highlight-color: transparent;
 }
 
+/* Cursor / touch glow pseudo-element */
 .card::before,
 .edu-card::before,
 .pub-item::before {
@@ -459,15 +468,26 @@ main > .section + .section::before {
     z-index: 0;
 }
 
+/* Desktop hover */
 .card:hover::before,
 .edu-card:hover::before,
 .pub-item:hover::before {
     opacity: 1;
 }
 
+/* Touch active glow */
+.card.touch-active::before,
+.edu-card.touch-active::before,
+.pub-item.touch-active::before {
+    opacity: 1;
+}
+
 .card:hover,
 .edu-card:hover,
-.pub-item:hover {
+.pub-item:hover,
+.card.touch-active,
+.edu-card.touch-active,
+.pub-item.touch-active {
     border-color: rgba(99, 102, 241, 0.25);
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
 }
@@ -483,7 +503,8 @@ main > .section + .section::before {
     padding: 28px;
 }
 
-.card:hover {
+.card:hover,
+.card.touch-active {
     transform: translateY(-3px);
 }
 
@@ -685,13 +706,15 @@ main > .section + .section::before {
     transform: translateY(0) scale(1);
 }
 
-/* --- Responsive --- */
+/* --- Responsive: Tablet --- */
 
 @media (max-width: 1024px) {
     .edu-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* --- Responsive: Mobile --- */
 
 @media (max-width: 768px) {
     .nav-toggle {
@@ -769,13 +792,65 @@ main > .section + .section::before {
         left: -24px;
     }
 
+    /* Mobile performance: reduce grain */
+    body::before {
+        opacity: 0.03;
+    }
+
+    /* Mobile performance: smaller, lighter orbs */
     .orb-1 {
         width: 350px;
         height: 350px;
+        filter: blur(80px);
+        opacity: 0.7;
     }
 
     .orb-2 {
-        width: 300px;
-        height: 300px;
+        width: 280px;
+        height: 280px;
+        filter: blur(80px);
+        opacity: 0.7;
+    }
+
+    /* Larger touch target for mobile nav links */
+    .nav-links a {
+        padding: 14px 24px;
+    }
+
+    /* Mobile card glow: use smaller radius */
+    .card::before,
+    .edu-card::before,
+    .pub-item::before {
+        background: radial-gradient(
+            300px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+            rgba(99, 102, 241, 0.1),
+            transparent 40%
+        );
+    }
+}
+
+/* --- Reduced Motion --- */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.2s !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    .orb {
+        animation: none;
     }
 }
