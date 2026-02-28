@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haohan Lin — Senior Compute Architect</title>
+    <meta name="description" content="Portfolio of Haohan Lin, Senior Compute Architect at NVIDIA specializing in ML/DL accelerator firmware and fast kernels.">
+    <meta property="og:title" content="Haohan Lin — Senior Compute Architect">
+    <meta property="og:description" content="Senior Compute Architect at NVIDIA. ML/DL accelerators, computer vision, autonomous systems.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://haohlin.github.io">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav" id="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-logo">HL</a>
+            <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#publications">Publications</a></li>
+                <li><a href="#skills">Skills</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero" id="hero">
+        <div class="hero-grid"></div>
+        <div class="hero-content">
+            <p class="hero-greeting reveal">Hello, I'm</p>
+            <h1 class="hero-name reveal">Haohan Lin</h1>
+            <p class="hero-title reveal">Senior Compute Architect</p>
+            <p class="hero-tagline reveal">Building firmware and fast kernels for ML/DL accelerators at NVIDIA</p>
+            <div class="hero-links reveal">
+                <a href="https://www.linkedin.com/in/haohan-lin/" target="_blank" rel="noopener" class="hero-link">LinkedIn</a>
+                <a href="mailto:haohan.lin@outlook.com" class="hero-link">Email</a>
+                <a href="https://github.com/haohlin" target="_blank" rel="noopener" class="hero-link">GitHub</a>
+            </div>
+        </div>
+    </section>
+
+    <main>
+        <section class="section" id="about">
+            <div class="container">
+                <h2 class="section-label reveal">About</h2>
+                <p class="about-text reveal">
+                    Senior Compute Architect at NVIDIA, developing firmware and performance-critical kernels for next-generation ML/DL accelerators. With a MASc from UBC focused on 3D point cloud processing and statistical modeling for autonomous systems, I bridge the gap between machine learning research and the hardware that powers it.
+                </p>
+            </div>
+        </section>
+
+        <section class="section" id="experience">
+            <div class="container">
+                <h2 class="section-label reveal">Experience</h2>
+                <div class="timeline">
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Mar 2025 — Present</span>
+                            <h3 class="timeline-role">Senior Compute Architect</h3>
+                            <p class="timeline-company">NVIDIA</p>
+                            <p class="timeline-desc">Developing firmware and fast kernels for ML/DL accelerators, optimizing compute performance at the hardware-software boundary.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Feb 2022 — Mar 2025</span>
+                            <h3 class="timeline-role">AV Performance Architect</h3>
+                            <p class="timeline-company">NVIDIA</p>
+                            <p class="timeline-desc">Architected computer vision software and system-level performance for autonomous driving, robotics, surveillance, and VR/AR platforms.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Sep 2019 — Sep 2021</span>
+                            <h3 class="timeline-role">Graduate Research Assistant</h3>
+                            <p class="timeline-company">UBC ACIS Lab</p>
+                            <p class="timeline-desc">Developed ML frameworks and statistical modeling approaches for 3D point cloud processing and autonomous perception systems.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Sep 2020 — May 2021</span>
+                            <h3 class="timeline-role">Project Leader</h3>
+                            <p class="timeline-company">UBC</p>
+                            <p class="timeline-desc">Led a team of 5 engineers to build a deep learning-based conveyor object counting system. Achieved 1st place among 58 teams with &gt;95% accuracy.</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item reveal">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Feb 2019 — Jul 2019</span>
+                            <h3 class="timeline-role">Student Researcher</h3>
+                            <p class="timeline-company">TU Braunschweig</p>
+                            <p class="timeline-desc">Developed real-time airspace user detection algorithms for aviation safety research.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="projects">
+            <div class="container">
+                <h2 class="section-label reveal">Projects</h2>
+                <div class="card-grid">
+                    <article class="card reveal">
+                        <h3 class="card-title">ML/DL Accelerator Firmware &amp; Kernels</h3>
+                        <p class="card-desc">Performance-critical firmware and compute kernels for next-generation machine learning and deep learning accelerator hardware.</p>
+                        <div class="card-tags">
+                            <span class="tag">C/C++</span>
+                            <span class="tag">CUDA</span>
+                            <span class="tag">Firmware</span>
+                            <span class="tag">NVIDIA</span>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <h3 class="card-title">Autonomous Vehicle Computer Vision</h3>
+                        <p class="card-desc">System-level CV software architecture and performance optimization for autonomous driving, robotics, and AR/VR platforms.</p>
+                        <div class="card-tags">
+                            <span class="tag">Computer Vision</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">C++</span>
+                            <span class="tag">NVIDIA</span>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <h3 class="card-title">Conveyor Object Counting System</h3>
+                        <p class="card-desc">Deep learning-based counting system achieving &gt;95% accuracy. 1st place among 58 teams, funded by NSERC grant.</p>
+                        <div class="card-tags">
+                            <span class="tag">Deep Learning</span>
+                            <span class="tag">PyTorch</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">NSERC</span>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <h3 class="card-title">3D Point Cloud Detection with HGMM</h3>
+                        <p class="card-desc">MASc thesis research on Heterogeneous Gaussian Mixture Models for 3D point cloud processing. Published at ICRA 2021.</p>
+                        <div class="card-tags">
+                            <span class="tag">3D Vision</span>
+                            <span class="tag">PyTorch</span>
+                            <span class="tag">ICRA</span>
+                            <span class="tag">Research</span>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <h3 class="card-title">Airspace User Detection</h3>
+                        <p class="card-desc">Real-time detection algorithms for identifying airspace users, developed during research at TU Braunschweig.</p>
+                        <div class="card-tags">
+                            <span class="tag">Real-time</span>
+                            <span class="tag">Detection</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <h3 class="card-title">CUDA k-d Tree Builder</h3>
+                        <p class="card-desc">GPU-accelerated parallel k-d tree construction for high-performance spatial indexing and nearest-neighbor queries.</p>
+                        <div class="card-tags">
+                            <span class="tag">CUDA</span>
+                            <span class="tag">C++</span>
+                            <span class="tag">GPU</span>
+                            <span class="tag">Parallel</span>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="education">
+            <div class="container">
+                <h2 class="section-label reveal">Education</h2>
+                <div class="edu-grid">
+                    <article class="edu-card reveal">
+                        <span class="edu-years">2019 — 2021</span>
+                        <h3 class="edu-degree">MASc Engineering</h3>
+                        <p class="edu-school">University of British Columbia</p>
+                        <p class="edu-details">GPA 4.0 · Thesis: Initialization Methods for HGMM Point Clouds · Faculty of Applied Science Graduate Award</p>
+                    </article>
+                    <article class="edu-card reveal">
+                        <span class="edu-years">2019</span>
+                        <h3 class="edu-degree">Exchange Program</h3>
+                        <p class="edu-school">TU Braunschweig, Germany</p>
+                        <p class="edu-details">Research exchange focused on real-time detection systems for aviation safety</p>
+                    </article>
+                    <article class="edu-card reveal">
+                        <span class="edu-years">2015 — 2019</span>
+                        <h3 class="edu-degree">BEng Honors</h3>
+                        <p class="edu-school">Northwestern Polytechnical University</p>
+                        <p class="edu-details">GPA 3.79 · National Scholarship · Outstanding Student Award · First-class Scholarship</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="publications">
+            <div class="container">
+                <h2 class="section-label reveal">Publications &amp; Certifications</h2>
+                <div class="pub-list">
+                    <article class="pub-item reveal">
+                        <span class="pub-venue">ICRA 2021</span>
+                        <h3 class="pub-title">Evaluating Initialization Methods for Discriminative and Fast-Converging HGMM Point Clouds</h3>
+                        <p class="pub-authors">IEEE International Conference on Robotics and Automation</p>
+                    </article>
+                    <article class="pub-item reveal">
+                        <span class="pub-venue">NVIDIA · Dec 2024</span>
+                        <h3 class="pub-title">Parameter-Efficient Fine-Tuning for LLM</h3>
+                        <p class="pub-authors">Internal certification on modern LLM fine-tuning techniques</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="skills">
+            <div class="container">
+                <h2 class="section-label reveal">Skills</h2>
+                <div class="skills-group reveal">
+                    <h3 class="skills-category">Languages</h3>
+                    <div class="skills-chips">
+                        <span class="chip">Python</span>
+                        <span class="chip">C/C++</span>
+                        <span class="chip">CUDA</span>
+                        <span class="chip">SQL</span>
+                        <span class="chip">Java</span>
+                        <span class="chip">HTML/CSS</span>
+                    </div>
+                </div>
+                <div class="skills-group reveal">
+                    <h3 class="skills-category">Frameworks</h3>
+                    <div class="skills-chips">
+                        <span class="chip">PyTorch</span>
+                        <span class="chip">NumPy</span>
+                        <span class="chip">NVIDIA Kaolin</span>
+                    </div>
+                </div>
+                <div class="skills-group reveal">
+                    <h3 class="skills-category">Tools</h3>
+                    <div class="skills-chips">
+                        <span class="chip">Git</span>
+                        <span class="chip">Linux</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="https://www.linkedin.com/in/haohan-lin/" target="_blank" rel="noopener">LinkedIn</a>
+                <a href="https://github.com/haohlin" target="_blank" rel="noopener">GitHub</a>
+                <a href="mailto:haohan.lin@outlook.com">Email</a>
+            </div>
+            <p class="footer-copy">&copy; 2026 Haohan Lin</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
