@@ -525,13 +525,44 @@
     top: 0;
     width: var(--leader-length, 0px);
     border-top: 1.75px dashed var(--leader-color, var(--au));
-    opacity: 0.72;
+    opacity: 0;
     transform: rotate(var(--leader-angle, 0deg));
     transform-origin: 0 0;
     pointer-events: none;
     z-index: 0;
+    transition: opacity 0.18s ease, filter 0.18s ease;
   }
-  .pin-spider.no-leader .pin-leader { display: none; }
+  .pin-spider .pin-leader::after {
+    content: '';
+    position: absolute;
+    right: -1px;
+    top: -4.4px;
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 7px solid var(--leader-color, var(--au));
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.22));
+  }
+  .pin-spider .pin-anchor {
+    position: absolute;
+    left: -5px;
+    top: -5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--leader-color, var(--au));
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--leader-color, var(--au)) 20%, transparent), 0 2px 6px rgba(0,0,0,0.22);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+    transition: opacity 0.18s ease;
+  }
+  .pin-spider.no-leader .pin-leader,
+  .pin-spider.no-leader .pin-anchor { display: none; }
+  .pin-spider.is-spidered .pin-leader { opacity: 0.92; }
+  .pin-spider.is-spidered .pin-anchor { opacity: 1; }
   .pin-spider .pin-stay,
   .pin-spider .pin-spot {
     position: absolute;
@@ -540,10 +571,19 @@
     transform: translate(calc(var(--dx, 0px) - var(--pin-r, 12px)), calc(var(--dy, 0px) - var(--pin-r, 12px)));
     pointer-events: auto;
     z-index: 1;
+    transition: transform 0.2s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   }
-  html[data-theme="dark"] .pin-spider .pin-leader {
-    opacity: 0.86;
+  .pin-spider.is-spidered .pin-stay,
+  .pin-spider.is-spidered .pin-spot {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.34), 0 0 0 4px color-mix(in srgb, var(--leader-color, var(--au)) 22%, transparent);
+  }
+  html[data-theme="dark"] .pin-spider.is-spidered .pin-leader {
+    opacity: 0.96;
     filter: drop-shadow(0 1px 2px rgba(0,0,0,0.65));
+  }
+  html[data-theme="dark"] .pin-spider .pin-anchor {
+    background: var(--night-card);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--leader-color, var(--au)) 38%, transparent), 0 2px 7px rgba(0,0,0,0.65);
   }
   html[data-theme="dark"] .pin-stay,
   html[data-theme="dark"] .pin-spot {
@@ -1777,7 +1817,7 @@
     document.body.setAttribute('data-active-plan', plan);
     Object.entries(plans).forEach(([key, el]) => el.classList.toggle('show', key === plan));
     buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.plan === plan));
-    setTimeout(() => { const map = maps[plan] && maps[plan](); if (map) { map.invalidateSize(); fitTripMap(map); } }, 80);
+    setTimeout(() => { const map = maps[plan] && maps[plan](); if (map) { map.invalidateSize(); if (map.__resetSpider) map.__resetSpider(); fitTripMap(map); } }, 80);
   }
   document.body.setAttribute('data-active-plan', 'au');
   buttons.forEach(b => b.addEventListener('click', () => showPlan(b.dataset.plan)));
@@ -2063,29 +2103,28 @@
     ].join(';');
   }
 
-  function makeSpiderIcon(innerHtml, pinRadius, offset, routeColor) {
+  function makeSpiderIcon(innerHtml, pinRadius, offset, routeColor, isSpidered = false) {
     const dx = Number(offset?.x || 0);
     const dy = Number(offset?.y || 0);
     const hasLeader = Math.sqrt(dx * dx + dy * dy) > 3;
     return L.divIcon({
       className: '',
-      html: `<div class="pin-spider ${hasLeader ? '' : 'no-leader'}" style="${markerOffsetStyle(offset, routeColor, pinRadius)}"><span class="pin-leader"></span>${innerHtml}</div>`,
+      html: `<div class="pin-spider ${hasLeader ? '' : 'no-leader'} ${isSpidered ? 'is-spidered' : ''}" style="${markerOffsetStyle(offset, routeColor, pinRadius)}"><span class="pin-anchor"></span><span class="pin-leader"></span>${innerHtml}</div>`,
       iconSize: [1, 1],
       iconAnchor: [0, 0],
       popupAnchor: [dx, dy - pinRadius],
     });
   }
 
-  function makeStayIcon(num, palette, offset = { x: 0, y: 0 }, routeColor = '#C45A2B') {
-    return makeSpiderIcon(`<div class="pin-stay ${palette}">${num}</div>`, 16, offset, routeColor);
+  function makeStayIcon(num, palette, offset = { x: 0, y: 0 }, routeColor = '#C45A2B', isSpidered = false) {
+    return makeSpiderIcon(`<div class="pin-stay ${palette}">${num}</div>`, 16, offset, routeColor, isSpidered);
   }
-  function makeSpotIcon(palette, day, offset = { x: 0, y: 0 }, routeColor = '#C45A2B') {
+  function makeSpotIcon(palette, day, offset = { x: 0, y: 0 }, routeColor = '#C45A2B', isSpidered = false) {
     const label = day ? String(day).replace(/^0/, '') : '';
-    return makeSpiderIcon(`<div class="pin-spot ${palette}">${label}</div>`, 12, offset, routeColor);
+    return makeSpiderIcon(`<div class="pin-spot ${palette}">${label}</div>`, 12, offset, routeColor, isSpidered);
   }
 
-  function computeMarkerOffsets(map, locations) {
-    const threshold = 34;
+  function computeMarkerClusters(map, locations, threshold = 34) {
     const points = locations.map((loc, index) => ({ index, point: map.latLngToLayerPoint(loc.coords) }));
     const visited = new Set();
     const clusters = [];
@@ -2107,30 +2146,32 @@
           }
         });
       }
-      clusters.push(cluster);
+      clusters.push(cluster.sort((a, b) => a.index - b.index));
     });
+    return clusters;
+  }
 
-    const offsets = locations.map(() => ({ x: 0, y: 0 }));
-    clusters.forEach(cluster => {
-      if (cluster.length <= 1) return;
-      const count = cluster.length;
-      cluster
-        .sort((a, b) => a.index - b.index)
-        .forEach((item, order) => {
-          if (count === 2) {
-            const pair = [{ x: -24, y: -18 }, { x: 24, y: 18 }];
-            offsets[item.index] = pair[order];
-            return;
-          }
-          const radius = count <= 4 ? 34 : count <= 8 ? 44 : 56;
-          const angle = -Math.PI / 2 + (2 * Math.PI * order / count);
-          offsets[item.index] = {
-            x: Math.cos(angle) * radius,
-            y: Math.sin(angle) * radius,
-          };
-        });
+  function computeSpiderOffsets(cluster) {
+    const offsets = {};
+    const count = cluster.length;
+    cluster.forEach((item, order) => {
+      if (count === 2) {
+        const pair = [{ x: -24, y: -18 }, { x: 24, y: 18 }];
+        offsets[item.index] = pair[order];
+        return;
+      }
+      const radius = count <= 4 ? 34 : count <= 8 ? 44 : 56;
+      const angle = -Math.PI / 2 + (2 * Math.PI * order / count);
+      offsets[item.index] = {
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+      };
     });
     return offsets;
+  }
+
+  function findClusterForMarker(map, locations, markerIndex) {
+    return computeMarkerClusters(map, locations).find(cluster => cluster.some(item => item.index === markerIndex)) || [];
   }
 
   function fitTripMap(map) {
@@ -2159,15 +2200,53 @@
     map.__tripBounds = L.latLngBounds(bounds);
     fitTripMap(map);
 
-    const markerOffsets = computeMarkerOffsets(map, locations);
-    locations.forEach((loc, index) => {
-      const offset = markerOffsets[index];
+    const markers = [];
+    const baseOffsets = locations.map(() => ({ x: 0, y: 0 }));
+
+    function setMarkerIcon(index, offset = baseOffsets[index], isSpidered = false) {
+      const loc = locations[index];
       const icon = loc.type === 'stay'
-        ? makeStayIcon(loc.num, palette, offset, routeColor)
-        : makeSpotIcon(palette, loc.day, offset, routeColor);
+        ? makeStayIcon(loc.num, palette, offset, routeColor, isSpidered)
+        : makeSpotIcon(palette, loc.day, offset, routeColor, isSpidered);
+      markers[index].setIcon(icon);
+      markers[index].setZIndexOffset(isSpidered ? 1000 + index : 0);
+    }
+
+    function resetSpider() {
+      map.__activeSpiderCluster = [];
+      markers.forEach((marker, index) => setMarkerIcon(index, baseOffsets[index], false));
+    }
+
+    function openSpiderFor(index) {
+      const cluster = findClusterForMarker(map, locations, index);
+      if (cluster.length <= 1) {
+        resetSpider();
+        markers[index].openPopup();
+        return;
+      }
+      const spiderOffsets = computeSpiderOffsets(cluster);
+      const clusterIndices = cluster.map(item => item.index);
+      map.__activeSpiderCluster = clusterIndices;
+      markers.forEach((marker, markerIndex) => {
+        const isSpidered = clusterIndices.includes(markerIndex);
+        setMarkerIcon(markerIndex, isSpidered ? spiderOffsets[markerIndex] : baseOffsets[markerIndex], isSpidered);
+      });
+      markers[index].openPopup();
+    }
+
+    locations.forEach((loc, index) => {
+      const icon = loc.type === 'stay'
+        ? makeStayIcon(loc.num, palette, baseOffsets[index], routeColor, false)
+        : makeSpotIcon(palette, loc.day, baseOffsets[index], routeColor, false);
       const marker = L.marker(loc.coords, { icon }).addTo(map);
       marker.bindPopup(buildPopupHtml(loc, palette), { maxWidth: 320 });
+      marker.on('click', () => openSpiderFor(index));
+      markers.push(marker);
     });
+
+    map.__tripMarkers = markers;
+    map.__resetSpider = resetSpider;
+    map.on('zoomstart', resetSpider);
 
     return map;
   }
